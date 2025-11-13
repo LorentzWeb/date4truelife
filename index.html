@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrueLife-Date</title>
+    <style>
+        /* 基础样式与字体[3,6](@ref) */
+        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            --primary-color: #e91e63;
+            /* 主色调 */
+            --secondary-color: #ff80ab;
+            /* 辅助色 */
+            --text-color: #333;
+            --bg-color: #f9f7fe;
+            /* 背景色 */
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #f9f7fe 100%);
+            /* 渐变背景[3](@ref) */
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* 主容器样式 */
+        .container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 3rem 2.5rem;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* 标题与日期显示 */
+        .main-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            color: var(--primary-color);
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .current-date {
+            font-size: 1.4rem;
+            margin-bottom: 2.5rem;
+            color: #666;
+            font-weight: 300;
+        }
+
+        /* 纪念日计数样式 */
+        .anniversary-counter {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            font-size: 1.6rem;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+        }
+
+        /* 温馨话语样式 */
+        .message {
+            font-size: 1.3rem;
+            margin: 1.2rem 0;
+            color: var(--primary-color);
+            font-style: italic;
+        }
+
+        /* 图片容器样式 */
+        .image-container {
+            margin: 2.5rem 0;
+        }
+
+        .image-container img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            /* 圆形图片[3](@ref) */
+            object-fit: cover;
+            border: 5px solid var(--primary-color);
+            box-shadow: var(--shadow);
+            transition: all 0.5s ease;
+        }
+
+        .image-container img:hover {
+            transform: scale(1.05) rotate(5deg);
+            /* 悬停动画[6](@ref) */
+        }
+
+        /* 装饰元素 */
+        .decoration {
+            font-size: 3rem;
+            margin: 1rem 0;
+            color: var(--secondary-color);
+        }
+
+        /* 响应式设计：针对平板[1,6](@ref) */
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            .main-title {
+                font-size: 2.2rem;
+            }
+
+            .anniversary-counter {
+                font-size: 1.3rem;
+            }
+
+            .message {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* 响应式设计：针对手机*/
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem 1rem;
+                border-radius: 15px;
+            }
+
+            .main-title {
+                font-size: 1.8rem;
+            }
+
+            .current-date {
+                font-size: 1.1rem;
+            }
+
+            .anniversary-counter {
+                font-size: 1.1rem;
+                padding: 1rem;
+            }
+
+            .image-container img {
+                width: 300px;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="main-title">TrueLife</h1>
+
+        <div class="decoration">❤</div>
+
+        <div id="a" class="message"></div>
+
+        <div id="a1" class="message"></div>
+
+        <div id="a3" class="message">又是喜歡TRUELIFE的一天</div>
+        <div id="a4" class="message">時尚說真讓人開心呢</div>
+
+        <div class="image-container">
+            <img src="img.png" alt="TrueLife">
+        </div>
+
+        <div class="decoration">✦</div>
+    </div>
+
+    <script>
+        // 页面加载完成后执行
+        window.onload = function () {
+            window.requestAnimationFrame(getDate);
+            window.requestAnimationFrame(countDate);
+        };
+
+        // 更新当前日期时间
+        function getDate() {
+            window.setTimeout(function () {
+                window.requestAnimationFrame(getDate);
+            }, 1000 / 2);
+
+            var d = new Date();
+            var year = d.getFullYear();
+            var month = d.getMonth() + 1;
+            var day = d.getDay();
+            var days = d.getDate();
+            var hour = d.getHours();
+            var minute = d.getMinutes();
+            var second = d.getSeconds();
+
+            if (month < 10) month = "0" + month;
+            if (days < 10) days = "0" + days;
+            if (hour < 10) hour = "0" + hour;
+            if (minute < 10) minute = "0" + minute;
+            if (second < 10) second = "0" + second;
+
+            var week = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");
+
+            document.getElementById("a").innerHTML = "現在是" + year + "年" + month + "月" + days + "日 " + week[day] + " " + hour + ":" + minute + ":" + second;
+        }
+
+        // 计算纪念日
+        function countDate() {
+            var date0 = new Date();
+            var date1 = new Date("8/23/2025");
+            // 计算天数差异
+            var timeDiff = date0.getTime() - date1.getTime();
+            var days_difference1 = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+            document.getElementById("a1").innerHTML = "與 TRUELIFE 在一起的第 " + days_difference1 + " 天";
+        }
+    </script>
+</body>
+
+</html>
