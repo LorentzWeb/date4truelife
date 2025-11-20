@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>月度作息表</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #e91e63;
+            --secondary-color: #ff80ab;
+            --text-color: #333;
+            --bg-color: #f9f7fe;
+            --card-bg: rgba(255, 198, 208, 0.9);
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --work-color: #ffcdd2;
+            /* 上班状态颜色 */
+            --rest-color: #ffffff;
+            /* 休息状态颜色 */
+            --other-month-color: #ffe3e6;
+            /* 非当前月份日期颜色 */
+            --today-color: #fff9c4;
+            /* 今天高亮颜色 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #f9f7fe 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            text-align: center;
+            max-width: 1000px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .main-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 0 1rem;
+        }
+
+        .month-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .month-nav button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            margin: 0 5px;
+        }
+
+        .month-nav button:hover:not(:disabled) {
+            background-color: var(--secondary-color);
+        }
+
+        .month-nav button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .current-month {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .day-header {
+            text-align: center;
+            padding: 12px 5px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .day-cell {
+            min-height: 90px;
+            padding: 8px;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .day-cell:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .day-number {
+            font-weight: bold;
+            font-size: 1.2rem;
+            align-self: flex-start;
+        }
+
+        .day-label {
+            font-size: 0.9rem;
+            margin-top: auto;
+            padding: 3px 6px;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .work {
+            background-color: var(--work-color);
+        }
+
+        .rest {
+            background-color: var(--rest-color);
+        }
+
+        .other-month {
+            background-color: var(--other-month-color);
+            opacity: 0.6;
+        }
+
+        .today {
+            border: 2px solid var(--primary-color);
+            background-color: var(--today-color);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .back-link:hover {
+            background-color: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .current-month {
+                font-size: 1.5rem;
+            }
+
+            .day-cell {
+                min-height: 70px;
+                padding: 5px;
+            }
+
+            .day-number {
+                font-size: 1rem;
+            }
+
+            .day-label {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .calendar-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .main-title {
+                font-size: 1.8rem;
+            }
+
+            .day-header {
+                padding: 8px 3px;
+                font-size: 0.9rem;
+            }
+
+            .day-cell {
+                min-height: 60px;
+            }
+
+            .day-label {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="main-title">月度作息表</h1>
+
+        <div class="calendar-header">
+            <div class="month-nav">
+                <button id="prev-month">‹ 上个月</button>
+            </div>
+            <div class="current-month" id="current-month">2025年9月</div>
+            <div class="month-nav">
+                <button id="next-month">下个月 ›</button>
+            </div>
+        </div>
+
+        <div class="calendar-grid" id="calendar-grid">
+            <!-- 日历内容将通过JavaScript动态生成 -->
+        </div>
+
+        <a href="/" class="back-link">返回主页面</a>
+    </div>
+
+    <script>
+        // 硬编码的作息数据（2025年9月-12月）
+        const scheduleData = {
+            "2025-11": {
+                1: { status: "work", label: "上班" },
+                2: { status: "rest", label: "休息" },
+                3: { status: "work", label: "上班" },
+                4: { status: "rest", label: "休息" },
+                5: { status: "work", label: "上班" },
+                6: { status: "work", label: "上班" },
+                7: { status: "work", label: "上班" },
+                8: { status: "rest", label: "休息" },
+                9: { status: "work", label: "上班" },
+                10: { status: "work", label: "上班" },
+                11: { status: "work", label: "上班" },
+                12: { status: "rest", label: "休息" },
+                13: { status: "work", label: "上班" },
+                14: { status: "work", label: "上班" },
+                15: { status: "work", label: "上班" },
+                16: { status: "rest", label: "休息" },
+                17: { status: "work", label: "上班" },
+                18: { status: "rest", label: "休息" },
+                19: { status: "work", label: "上班" },
+                20: { status: "work", label: "陪护" },
+                21: { status: "work", label: "上班" },
+                22: { status: "rest", label: "休息" },
+                23: { status: "work", label: "上班" },
+                24: { status: "work", label: "上班" },
+                25: { status: "work", label: "上班" },
+                26: { status: "work", label: "上班" },
+                27: { status: "work", label: "上班" },
+                28: { status: "rest", label: "休息" },
+                29: { status: "work", label: "上班" },
+                30: { status: "rest", label: "上班" }
+            },
+            "2025-12": {
+                1: { status: "work", label: "上班" },
+                2: { status: "work", label: "上班" },
+                3: { status: "work", label: "上班" },
+                4: { status: "work", label: "上班" },
+                5: { status: "work", label: "上班" },
+                6: { status: "work", label: "上班" },
+                7: { status: "work", label: "上班" },
+                8: { status: "work", label: "上班" },
+                9: { status: "work", label: "上班" },
+                10: { status: "work", label: "上班" },
+                11: { status: "work", label: "上班" },
+                12: { status: "work", label: "上班" },
+                13: { status: "work", label: "上班" },
+                14: { status: "work", label: "上班" },
+                15: { status: "work", label: "上班" },
+                16: { status: "work", label: "上班" },
+                17: { status: "work", label: "上班" },
+                18: { status: "work", label: "上班" },
+                19: { status: "work", label: "上班" },
+                20: { status: "work", label: "上班" },
+                21: { status: "work", label: "上班" },
+                22: { status: "work", label: "上班" },
+                23: { status: "work", label: "上班" },
+                24: { status: "work", label: "上班" },
+                25: { status: "work", label: "上班" },
+                26: { status: "work", label: "上班" },
+                27: { status: "work", label: "上班" },
+                28: { status: "work", label: "上班" },
+                29: { status: "work", label: "上班" },
+                30: { status: "work", label: "上班" },
+                31: { status: "work", label: "上班" }
+            }
+        };
+
+        // 当前显示的年月
+        let currentYear = 2025;
+        let currentMonth = 11 - 1; // 月份从0开始，8表示9月
+
+        // DOM元素
+        const calendarGrid = document.getElementById('calendar-grid');
+        const currentMonthElement = document.getElementById('current-month');
+        const prevMonthButton = document.getElementById('prev-month');
+        const nextMonthButton = document.getElementById('next-month');
+
+        // 初始化日历
+        renderCalendar(currentYear, currentMonth);
+
+        // 事件监听器
+        prevMonthButton.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 8) { // 最小月份为9月(8)
+                currentMonth = 11; // 12月(11)
+            }
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        nextMonthButton.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) { // 最大月份为12月(11)
+                currentMonth = 8; // 9月(8)
+            }
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        // 渲染日历函数
+        function renderCalendar(year, month) {
+            // 更新月份显示
+            currentMonthElement.textContent = `${year}年${month + 1}月`;
+
+            // 清空日历网格
+            calendarGrid.innerHTML = '';
+
+            // 添加星期标题
+            const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            weekdays.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.textContent = day;
+                calendarGrid.appendChild(dayHeader);
+            });
+
+            // 获取当月第一天和最后一天
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const firstDayOfWeek = firstDay.getDay(); // 0-6, 0是周日
+
+            // 获取上个月的最后几天
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+
+            // 添加上个月的最后几天（灰色显示）
+            for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+                const day = prevMonthLastDay - i;
+                const dayCell = document.createElement('div');
+                dayCell.className = 'day-cell other-month';
+                dayCell.innerHTML = `
+                    <div class="day-number">${day}</div>
+                    <div class="day-label">-</div>
+                `;
+                calendarGrid.appendChild(dayCell);
+            }
+
+            // 添加当月的所有天
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const isToday = isSameDay(date, new Date());
+
+                // 获取当天的状态数据
+                const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
+                const dayData = scheduleData[monthKey] && scheduleData[monthKey][day] ?
+                    scheduleData[monthKey][day] : { status: "rest", label: "休息" };
+
+                const dayCell = document.createElement('div');
+                dayCell.className = `day-cell ${dayData.status} ${isToday ? 'today' : ''}`;
+                dayCell.innerHTML = `
+                    <div class="day-number">${day}</div>
+                    <div class="day-label">${dayData.label}</div>
+                `;
+
+                calendarGrid.appendChild(dayCell);
+            }
+
+            // 计算下个月的前几天以填满网格
+            const totalCells = 42; // 6行x7天
+            const cellsUsed = firstDayOfWeek + daysInMonth;
+            const remainingCells = totalCells - cellsUsed;
+
+            // 添加下个月的前几天（灰色显示）
+            for (let i = 1; i <= remainingCells; i++) {
+                const dayCell = document.createElement('div');
+                dayCell.className = 'day-cell other-month';
+                dayCell.innerHTML = `
+                    <div class="day-number">${i}</div>
+                    <div class="day-label">-</div>
+                `;
+                calendarGrid.appendChild(dayCell);
+            }
+        }
+
+        // 判断两个日期是否为同一天
+        function isSameDay(date1, date2) {
+            return date1.getFullYear() === date2.getFullYear() &&
+                date1.getMonth() === date2.getMonth() &&
+                date1.getDate() === date2.getDate();
+        }
+    </script>
+</body>
+
+</html>
