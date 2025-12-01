@@ -400,8 +400,11 @@
         };
 
         // 当前显示的年月
-        let currentYear = 2025;
-        let currentMonth = 11 - 1; // 月份从0开始，8表示9月
+        let currentDate = new Date();
+        let currentYear = currentDate.getFullYear();
+        let currentMonth = currentDate.getMonth();
+        // let currentYear = 2025;
+        // let currentMonth = 12 - 1; // 月份从0开始，8表示9月
 
         // DOM元素
         const calendarGrid = document.getElementById('calendar-grid');
