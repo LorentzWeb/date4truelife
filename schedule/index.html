@@ -250,7 +250,7 @@
             <div class="month-nav">
                 <button id="prev-month"> ‹ </button>
             </div>
-            <div class="current-month" id="current-month">2025年9月</div>
+            <div class="current-month" id="current-month">2026年1月</div>
             <div class="month-nav">
                 <button id="next-month"> › </button>
             </div>
@@ -331,40 +331,40 @@
                 30: { status: "rest", label: "休息" },
                 31: { status: "work", label: "日班" }
             },
-            "2026-1": {
+            "2026-01": {
                 1: { status: "rest", label: "休息" },
                 2: { status: "rest", label: "休息" },
                 3: { status: "rest", label: "休息" },
                 4: { status: "work", label: "日班" },
                 5: { status: "work", label: "日班" },
-                6: { status: "work", label: "日班" },
-                7: { status: "work", label: "日班" },
-                8: { status: "work", label: "日班" },
+                6: { status: "work", label: "值班" },
+                7: { status: "work", label: "陪护" },
+                8: { status: "rest", label: "休息" },
                 9: { status: "work", label: "日班" },
                 10: { status: "work", label: "日班" },
-                11: { status: "work", label: "日班" },
+                11: { status: "rest", label: "休息" },
                 12: { status: "work", label: "日班" },
                 13: { status: "work", label: "日班" },
-                14: { status: "work", label: "日班" },
+                14: { status: "rest", label: "休息" },
                 15: { status: "work", label: "日班" },
                 16: { status: "work", label: "日班" },
-                17: { status: "work", label: "日班" },
+                17: { status: "rest", label: "休息" },
                 18: { status: "work", label: "日班" },
-                19: { status: "work", label: "日班" },
+                19: { status: "rest", label: "休息" },
                 20: { status: "work", label: "日班" },
                 21: { status: "work", label: "日班" },
-                22: { status: "work", label: "日班" },
+                22: { status: "rest", label: "休息" },
                 23: { status: "work", label: "日班" },
                 24: { status: "work", label: "日班" },
-                25: { status: "work", label: "日班" },
-                26: { status: "work", label: "日班" },
+                25: { status: "rest", label: "休息" },
+                26: { status: "rest", label: "休息" },
                 27: { status: "work", label: "日班" },
                 28: { status: "work", label: "日班" },
                 29: { status: "work", label: "日班" },
                 30: { status: "work", label: "日班" },
                 31: { status: "work", label: "日班" }
             },
-            "2026-12": {
+            "2026-02": {
                 1: { status: "work", label: "日班" },
                 2: { status: "work", label: "日班" },
                 3: { status: "work", label: "日班" },
@@ -418,16 +418,19 @@
         // 事件监听器
         prevMonthButton.addEventListener('click', () => {
             currentMonth--;
-            if (currentMonth < 8) { // 最小月份为9月(8)
+            if (currentMonth < 0) { // 最小月份为1月(0)
                 currentMonth = 11; // 12月(11)
+                currentYear--;
             }
+
             renderCalendar(currentYear, currentMonth);
         });
 
         nextMonthButton.addEventListener('click', () => {
             currentMonth++;
             if (currentMonth > 11) { // 最大月份为12月(11)
-                currentMonth = 8; // 9月(8)
+                currentMonth = 0; // 1月(0)
+                currentYear++;
             }
             renderCalendar(currentYear, currentMonth);
         });
